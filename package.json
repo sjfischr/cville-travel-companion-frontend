@@ -7,10 +7,18 @@
     "start": "next start"
   },
   "dependencies": {
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "class-variance-authority": "^0.7.1",
+    "cmdk": "^1.1.1",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.536.0",
     "next": "^14.2.31",
+    "radix-ui": "^1.4.2",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-day-picker": "^9.8.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^3.1.0",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
