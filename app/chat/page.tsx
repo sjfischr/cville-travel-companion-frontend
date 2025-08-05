@@ -67,8 +67,9 @@ export default function Home() {
     }
   }, [useTestLocation])
 
-  // Send a text message (now returns assistant reply)
+  // Send a text message (now returns assistant reply and handles loading state)
   async function handleSendMessage(message: string): Promise<string> {
+    setLoading(true)
     const userMsg = { id: Date.now().toString(), role: "user" as const, content: message }
     setChatMessages((prev) => [...prev, userMsg])
     const locationToSend = useTestLocation ? testLocation : userLocation
@@ -91,6 +92,8 @@ export default function Home() {
         { id: Date.now().toString(), role: "assistant", content: errorMsg }
       ])
       return ""
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -99,12 +102,7 @@ export default function Home() {
     if (!input.trim()) return
     const text = input.trim()
     setInput('')
-    setLoading(true)
-    try {
-      await handleSendMessage(text)
-    } finally {
-      setLoading(false)
-    }
+    await handleSendMessage(text)
   }
 
   // Start voice recording → onstop will process
@@ -265,6 +263,24 @@ export default function Home() {
                 </div>
               </div>
             ))}
+            {loading && (
+              <div key="loading-indicator" className="flex w-full justify-start">
+                <div className="flex items-end max-w-[80%]">
+                  <div
+                    className="px-4 py-3 bg-gray-200"
+                    style={{
+                      borderRadius: '20px 20px 20px 6px',
+                    }}
+                  >
+                    <div className="flex items-center justify-center space-x-1.5">
+                      <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                      <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                      <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center border-t border-gray-200 p-3 bg-white">
