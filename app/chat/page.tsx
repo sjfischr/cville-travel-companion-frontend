@@ -69,9 +69,10 @@ export default function Home() {
 
   // Send a text message (now returns assistant reply and handles loading state)
   async function handleSendMessage(message: string): Promise<string> {
-    setLoading(true)
     const userMsg = { id: Date.now().toString(), role: "user" as const, content: message }
     setChatMessages((prev) => [...prev, userMsg])
+    setLoading(true)
+    
     const locationToSend = useTestLocation ? testLocation : userLocation
 
     try {
@@ -80,6 +81,8 @@ export default function Home() {
         { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message, location: locationToSend }) }
       )
       const { reply } = await res.json()
+      
+      setLoading(false)
       setChatMessages((prev) => [
         ...prev,
         { id: Date.now().toString(), role: "assistant", content: reply }
@@ -87,13 +90,12 @@ export default function Home() {
       return reply
     } catch {
       const errorMsg = "Sorry, something went wrong."
+      setLoading(false)
       setChatMessages((prev) => [
         ...prev,
         { id: Date.now().toString(), role: "assistant", content: errorMsg }
       ])
       return ""
-    } finally {
-      setLoading(false)
     }
   }
 
