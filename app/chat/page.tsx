@@ -122,27 +122,27 @@ export default function Home() {
       recorder.onstop = async () => {
         setVoiceStatus("processing")
         const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" })
-        // send to STT
         const form = new FormData()
         form.append("audio", audioBlob)
-        try {
-          const sttRes = await fetch("https://cville-travel-companion-backend.onrender.com/stt", {
-            method: "POST", body: form
-          })
-          const { transcript } = await sttRes.json()
-          setVoiceTranscript(transcript)
-          // send to chat and play back
-          const reply = await handleSendMessage(transcript)
-          if (reply) handlePlayAudio(reply)
-        } catch (err) {
-          console.error("Voice processing failed", err)
-          setChatMessages((prev) => [
+        // send to STT
+        const sttRes = await fetch("https://cville-travel-companion-backend.onrender.com/stt", {
+          method: "POST", body: form
+        })
+        const { transcript } = await sttRes.json()
+        console.log("STT returned:", transcript)
+        if (!transcript.trim()) {
+          setChatMessages(prev => [
             ...prev,
-            { id: Date.now().toString(), role: "assistant", content: "Voice chat failed." }
+            { id: Date.now().toString(), role: "assistant", content: "Sorry, I didn't catch that. Could you try again?" }
           ])
-        } finally {
           setVoiceStatus("idle")
+          return
         }
+        setVoiceTranscript(transcript)
+        // send to chat and play back
+        const reply = await handleSendMessage(transcript)
+        if (reply) handlePlayAudio(reply)
+        setVoiceStatus("idle")
       }
 
       mediaRecorderRef.current = recorder
