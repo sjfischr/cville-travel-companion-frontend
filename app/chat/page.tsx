@@ -218,8 +218,8 @@ export default function Home() {
 
   if (currentScreen === "chat") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-        <div className="flex flex-col h-[90vh] w-full max-w-md border border-gray-300 bg-white rounded-xl shadow-lg overflow-hidden font-sans">
+      <div className="h-screen w-screen bg-gray-100 flex items-center justify-center">
+        <div className="flex flex-col h-full w-full max-w-md bg-white font-sans md:h-[90vh] md:rounded-xl md:shadow-lg md:border md:border-gray-300">
           {/* Location toggle header */}
           <div className="p-3 bg-blue-50 border-b border-gray-200 flex items-center justify-between">
             <span className="text-sm text-gray-600">
@@ -299,8 +299,8 @@ export default function Home() {
 
   // voice-chat screen
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="flex flex-col items-center justify-center h-full max-w-md mx-auto p-6 space-y-4 bg-white border rounded-lg shadow-lg">
+    <div className="h-screen w-screen bg-gray-100 flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center h-full w-full max-w-md mx-auto p-6 space-y-4 bg-white md:h-auto md:rounded-lg md:shadow-lg">
         {voiceStatus === 'idle' && (
           <p className="text-gray-900">Tap to start voice chat with Sam</p>
         )}
