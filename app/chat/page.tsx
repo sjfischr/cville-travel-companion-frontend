@@ -80,14 +80,39 @@ export default function Home() {
         "https://cville-travel-companion-backend.onrender.com/chat",
         { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message, location: locationToSend }) }
       )
-      const { reply } = await res.json()
       
-      setLoading(false)
+      if (!res.body) {
+        throw new Error("No response body")
+      }
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let fullReply = ""
+      const assistantMessageId = Date.now().toString()
+
+      // Add a placeholder for the assistant's message
       setChatMessages((prev) => [
         ...prev,
-        { id: Date.now().toString(), role: "assistant", content: reply }
+        { id: assistantMessageId, role: "assistant", content: "" }
       ])
-      return reply
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        
+        const chunk = decoder.decode(value, { stream: true })
+        fullReply += chunk
+
+        // Update the assistant's message content as it streams in
+        setChatMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantMessageId ? { ...msg, content: fullReply } : msg
+          )
+        )
+      }
+      
+      setLoading(false)
+      return fullReply
     } catch {
       const errorMsg = "Sorry, something went wrong."
       setLoading(false)
