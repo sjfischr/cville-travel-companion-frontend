@@ -3,6 +3,8 @@
 
 **One-liner:** MCP-enabled, beer-savvy travel companion for Charlottesville—nicknamed “Sam”—with chat, voice, and live tap-list summaries.
 
+![IMG_4858](https://github.com/user-attachments/assets/66daa7c0-ff0c-4671-81d9-a0363d736dbf)
+
 ## Stack
 - **Next.js App Router** (`app/`)
 - **Tailwind CSS** via `@tailwindcss/postcss`
@@ -37,6 +39,8 @@ Start: uvicorn main:app --host 0.0.0.0 --port $PORT
 
 Architecture
 Frontend → /chat → OpenAI ↘ tools: /breweries, /restaurants, /speak
+
+
 
 ## Known issues
 Tap-list delay (first request). Working on caching + headless fetch + JSON feed detection.
